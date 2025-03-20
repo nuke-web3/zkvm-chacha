@@ -1,29 +1,30 @@
-use risc0_zkvm::guest::env;
+use risc0_zkvm::{
+    guest::env,
+    sha::{Impl, Sha256},
+}
+;use chacha20::ChaCha20;
+use chacha20::cipher::{KeyIvInit, StreamCipher};
 
 fn main() {
-    let plaintext: [u8; 16] = env::read();
-    let keystream: [u8; 16] = env::read();
+    let key: [u8; 32] = env::read();
+    let nonce: [u8; 12] = env::read();
+    // Expects to be filled with plaintext to be encrypted
+    let mut buffer: [u8; 16] = env::read();
+
+    // Hash plaintext & commit
+    let digest = Impl::hash_bytes(&buffer);
+    env::commit(&digest);
 
     // TODO:
-    // - Hash plaintext & commit?
-    // - Hash keystream & commit?
-   
-    let mut buffer = plaintext.clone();
-    xor_arrays(&plaintext,&keystream, &mut buffer);
-    
+    // - Hash key and/or nonce & commit?
+
+    // Key and IV must be references to the `GenericArray` type.
+    // Here we use the `Into` trait to convert arrays into it.
+    let mut cipher = ChaCha20::new(&key.into(), &nonce.into());
+
+    // Write ciphertext into buffer by applying keystream to plaintext
+    cipher.apply_keystream(&mut buffer);
+
     // write public output to the journal
     env::commit(&buffer);
-}
-
-/// UNSAFE: We demand input and output arrays here are the SAME length. 
-fn xor_arrays(arr1: &[u8], arr2: &[u8], output: &mut [u8]) {
-    // assert_eq!(arr1.len(), arr2.len(), "Arrays must have the same length");
-    // assert_eq!(arr1.len(), output.len(), "Output array must have the same length");
-
-    for i in 0..arr1.len() {
-        // We assume that input arrays are the same length, skipping checks to save cycles
-        unsafe {
-            *output.get_unchecked_mut(i) = arr1.get_unchecked(i) ^ arr2.get_unchecked(i);
-        }
-    }
 }
