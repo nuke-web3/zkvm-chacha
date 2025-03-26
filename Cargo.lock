@@ -512,6 +512,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67ba02a97a2bd10f4b59b25c7973101c79642302776489e030cd13cdab09ed15"
 
 [[package]]
+name = "common"
+version = "0.1.0"
+
+[[package]]
 name = "const-oid"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -974,6 +978,7 @@ name = "guest_encrypt"
 version = "0.1.0"
 dependencies = [
  "chacha20",
+ "common",
  "risc0-zkvm",
 ]
 
@@ -1039,6 +1044,7 @@ name = "host"
 version = "0.1.0"
 dependencies = [
  "chacha20",
+ "common",
  "hex-literal 1.0.0",
  "methods",
  "risc0-zkvm",

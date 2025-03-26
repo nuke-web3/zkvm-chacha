@@ -5,6 +5,8 @@ use risc0_zkvm::{
     sha::{Impl, Sha256},
 };
 
+use common::INPUT_BYTES_LENGTH;
+
 fn main() {
     let start = env::cycle_count();
 
@@ -13,7 +15,7 @@ fn main() {
     let mut nonce: [u8; 12] = [0; 12];
     env::read_slice(&mut nonce);
     // Expects to be filled with plaintext to be encrypted
-    let mut buffer: [u8; 16_000] = [0; 16_000];
+    let mut buffer: [u8; INPUT_BYTES_LENGTH] = [0; INPUT_BYTES_LENGTH];
     env::read_slice(&mut buffer);
 
     // Hash plaintext & commit

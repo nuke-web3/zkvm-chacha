@@ -4,10 +4,11 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+methods.workspace = true
+common.workspace = true
+
 chacha20.workspace = true
 hex-literal.workspace = true
-
-methods.workspace = true
 risc0-zkvm = { workspace = true,  default-features = true }
 tracing-subscriber.workspace = true
 serde.workspace = true

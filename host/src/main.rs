@@ -7,7 +7,7 @@ use methods::GUEST_ENCRYPT_ELF;
 use risc0_zkvm::sha::rust_crypto::{Digest, Sha256};
 use risc0_zkvm::{default_prover, ExecutorEnv};
 
-const INPUT_BYTES_LENGTH: usize = 3_000_000;
+use common::INPUT_BYTES_LENGTH;
 
 fn main() {
     // Initialize tracing. In order to view logs, run `RUST_LOG=info cargo run`
@@ -50,7 +50,7 @@ fn main() {
         .expect("Ciphertext unable to populate buffer");
 
     println!(
-        "zkVM -> plaintext hash:  0x{}",
+        "zkVM  -> plaintext hash: 0x{}",
         bytes_to_hex(&output_digest)
     );
 

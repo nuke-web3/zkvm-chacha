@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["demo-ChaCha","host", "methods", "methods/guest"]
+members = [ "common","demo-ChaCha","host", "methods", "methods/guest"]
 default-members = ["host"]
 
 [workspace.package]
@@ -10,6 +10,7 @@ edition = "2021"
 [workspace.dependencies]
 methods = { path = "methods" }
 host = { path = "host" }
+common = { path = "common" }
 
 chacha20 = "0.9.1"
 hex-literal = "1.0.0"
