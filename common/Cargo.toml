@@ -1,8 +1,6 @@
 [package]
-name = "demo-ChaCha"
+name = "common"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
-chacha20.workspace = true
-hex-literal.workspace = true

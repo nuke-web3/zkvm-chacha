@@ -1,15 +1,22 @@
+use chacha20::cipher::{KeyIvInit, StreamCipher};
+use chacha20::ChaCha20;
 use risc0_zkvm::{
     guest::env,
     sha::{Impl, Sha256},
-}
-;use chacha20::ChaCha20;
-use chacha20::cipher::{KeyIvInit, StreamCipher};
+};
+
+use common::INPUT_BYTES_LENGTH;
 
 fn main() {
-    let key: [u8; 32] = env::read();
-    let nonce: [u8; 12] = env::read();
+    let start = env::cycle_count();
+
+    let mut key: [u8; 32] = [0; 32];
+    env::read_slice(&mut key);
+    let mut nonce: [u8; 12] = [0; 12];
+    env::read_slice(&mut nonce);
     // Expects to be filled with plaintext to be encrypted
-    let mut buffer: [u8; 16] = env::read();
+    let mut buffer: [u8; INPUT_BYTES_LENGTH] = [0; INPUT_BYTES_LENGTH];
+    env::read_slice(&mut buffer);
 
     // Hash plaintext & commit
     let digest = Impl::hash_bytes(&buffer);
@@ -26,5 +33,8 @@ fn main() {
     cipher.apply_keystream(&mut buffer);
 
     // write public output to the journal
-    env::commit(&buffer);
+    env::commit_slice(&buffer);
+
+    let end = env::cycle_count();
+    eprintln!("*-*-*-* CYCLE COUNT: {}", end - start);
 }

@@ -1,7 +1,24 @@
 [workspace]
 resolver = "2"
-members = ["demo-ChaCha","host", "methods"]
+members = [ "common","demo-ChaCha","host", "methods", "methods/guest"]
 default-members = ["host"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[workspace.dependencies]
+methods = { path = "methods" }
+host = { path = "host" }
+common = { path = "common" }
+
+chacha20 = "0.9.1"
+hex-literal = "1.0.0"
+
+risc0-zkvm = { version = "2.0",  default-features = false, features = ['std'] }
+risc0-build = "2.0"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = "1.0"
 
 # Always optimize; building and running the guest takes much longer without optimization.
 [profile.dev]
