@@ -12,3 +12,6 @@ hex-literal.workspace = true
 risc0-zkvm = { workspace = true,  default-features = true }
 tracing-subscriber.workspace = true
 serde.workspace = true
+
+[features]
+cuda = ["risc0-zkvm/cuda"]
