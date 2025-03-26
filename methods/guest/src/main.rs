@@ -6,10 +6,15 @@ use risc0_zkvm::{
 };
 
 fn main() {
-    let key: [u8; 32] = env::read();
-    let nonce: [u8; 12] = env::read();
+    let start = env::cycle_count();
+
+    let mut key: [u8; 32] = [0; 32];
+    env::read_slice(&mut key);
+    let mut nonce: [u8; 12] = [0; 12];
+    env::read_slice(&mut nonce);
     // Expects to be filled with plaintext to be encrypted
-    let mut buffer: [u8; 16] = env::read();
+    let mut buffer: [u8; 16_000] = [0; 16_000];
+    env::read_slice(&mut buffer);
 
     // Hash plaintext & commit
     let digest = Impl::hash_bytes(&buffer);
@@ -26,5 +31,8 @@ fn main() {
     cipher.apply_keystream(&mut buffer);
 
     // write public output to the journal
-    env::commit(&buffer);
+    env::commit_slice(&buffer);
+
+    let end = env::cycle_count();
+    eprintln!("*-*-*-* CYCLE COUNT: {}", end - start);
 }
