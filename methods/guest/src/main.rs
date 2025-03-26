@@ -1,9 +1,9 @@
+use chacha20::cipher::{KeyIvInit, StreamCipher};
+use chacha20::ChaCha20;
 use risc0_zkvm::{
     guest::env,
     sha::{Impl, Sha256},
-}
-;use chacha20::ChaCha20;
-use chacha20::cipher::{KeyIvInit, StreamCipher};
+};
 
 fn main() {
     let key: [u8; 32] = env::read();

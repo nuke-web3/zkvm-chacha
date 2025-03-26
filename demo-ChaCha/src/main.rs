@@ -1,5 +1,5 @@
-use chacha20::ChaCha20;
 use chacha20::cipher::{KeyIvInit, StreamCipher, StreamCipherSeek};
+use chacha20::ChaCha20;
 use hex_literal::hex;
 
 fn main() {
