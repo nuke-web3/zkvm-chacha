@@ -7,6 +7,8 @@ use methods::GUEST_ENCRYPT_ELF;
 use risc0_zkvm::sha::rust_crypto::{Digest, Sha256};
 use risc0_zkvm::{default_prover, ExecutorEnv};
 
+const INPUT_BYTES_LENGTH: usize = 3_000_000;
+
 fn main() {
     // Initialize tracing. In order to view logs, run `RUST_LOG=info cargo run`
     tracing_subscriber::fmt()
@@ -19,7 +21,7 @@ fn main() {
     let nonce = [0x24; 12];
 
     // 16 byte test
-    let plaintext = [0; 16_000];
+    let plaintext = [0; INPUT_BYTES_LENGTH];
 
     // zkVM
     let env = ExecutorEnv::builder()
@@ -43,7 +45,7 @@ fn main() {
     // sha256 = 16 bytes committed first
     let output_digest: [u8; 32] = output[..32].try_into().expect("sha256 hash reading erorr");
     // Ciphertext is the rest of the journal bytes
-    let mut output_buffer: [u8; 16_000] = output[32..]
+    let mut output_buffer: [u8; INPUT_BYTES_LENGTH] = output[32..]
         .try_into()
         .expect("Ciphertext unable to populate buffer");
 
