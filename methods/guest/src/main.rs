@@ -1,5 +1,6 @@
 use chacha20::cipher::{KeyIvInit, StreamCipher};
 use chacha20::ChaCha20;
+use lz4_flex::compress_prepend_size;
 use risc0_zkvm::{
     guest::env,
     sha::{Impl, Sha256},
@@ -25,15 +26,16 @@ fn main() {
     // TODO:
     // - Hash key and/or nonce & commit?
 
+    let mut compressed_input = compress_prepend_size(&buffer);
     // Key and IV must be references to the `GenericArray` type.
     // Here we use the `Into` trait to convert arrays into it.
     let mut cipher = ChaCha20::new(&key.into(), &nonce.into());
 
     // Write ciphertext into buffer by applying keystream to plaintext
-    cipher.apply_keystream(&mut buffer);
+    cipher.apply_keystream(&mut compressed_input);
 
     // write public output to the journal
-    env::commit_slice(&buffer);
+    env::commit_slice(&compressed_input);
 
     let end = env::cycle_count();
     eprintln!("*-*-*-* CYCLE COUNT: {}", end - start);
