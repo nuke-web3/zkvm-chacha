@@ -7,7 +7,7 @@ use methods::GUEST_ENCRYPT_ELF;
 use risc0_zkvm::sha::rust_crypto::{Digest, Sha256};
 use risc0_zkvm::{default_prover, ExecutorEnv};
 
-use common::INPUT_BYTES_LENGTH;
+use common::INPUT_BYTES;
 
 fn main() {
     // Initialize tracing. In order to view logs, run `RUST_LOG=info cargo run`
@@ -21,7 +21,7 @@ fn main() {
     let nonce = [0x24; 12];
 
     // 16 byte test
-    let plaintext = [0; INPUT_BYTES_LENGTH];
+    let plaintext = INPUT_BYTES;
 
     // zkVM
     let env = ExecutorEnv::builder()
@@ -45,7 +45,7 @@ fn main() {
     // sha256 = 16 bytes committed first
     let output_digest: [u8; 32] = output[..32].try_into().expect("sha256 hash reading erorr");
     // Ciphertext is the rest of the journal bytes
-    let mut output_buffer: [u8; INPUT_BYTES_LENGTH] = output[32..]
+    let mut output_buffer: Vec<u8> = output[32..]
         .try_into()
         .expect("Ciphertext unable to populate buffer");
 
@@ -73,8 +73,14 @@ fn main() {
 
     // decrypt ciphertext by applying keystream again
     cipher.apply_keystream(&mut output_buffer);
+
     assert_eq!(output_buffer, plaintext);
-    println!("Decryption of zkVM ciphertext matches input!")
+    println!("Decryption of zkVM ciphertext matches input!");
+    println!(
+        "Output size to publish to DA = {} bytes (seal), {} bytes (ciphertext)",
+        receipt.seal_size(),
+        output_buffer.len()
+    );
 }
 
 fn bytes_to_hex(bytes: &[u8]) -> String {
