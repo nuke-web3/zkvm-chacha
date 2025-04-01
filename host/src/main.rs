@@ -5,7 +5,7 @@ use chacha20::ChaCha20;
 // The ELF is used for proving and the ID is used for verification.
 use methods::GUEST_ENCRYPT_ELF;
 use risc0_zkvm::sha::rust_crypto::{Digest, Sha256};
-use risc0_zkvm::{default_prover, ExecutorEnv};
+use risc0_zkvm::{default_prover, ExecutorEnv, ProverOpts, VerifierContext};
 
 use common::INPUT_BYTES;
 
@@ -36,7 +36,14 @@ fn main() {
 
     // Proof information by proving the specified ELF binary.
     // This struct contains the receipt along with statistics about execution of the guest
-    let prove_info = prover.prove(env, GUEST_ENCRYPT_ELF).unwrap();
+    let prove_info = prover
+        .prove_with_ctx(
+            env,
+            &VerifierContext::default(),
+            GUEST_ENCRYPT_ELF,
+            &ProverOpts::groth16(),
+        )
+        .unwrap();
 
     // extract the receipt.
     let receipt = prove_info.receipt;
