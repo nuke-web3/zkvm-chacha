@@ -83,7 +83,7 @@ fn main() {
     println!(
         "Output size to publish to DA = {} bytes (seal), {} bytes (ciphertext)",
         receipt.seal_size(),
-        decompressed_output.len()
+        output_buffer.len()
     );
 }
 
