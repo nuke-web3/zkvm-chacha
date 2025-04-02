@@ -1,0 +1,12 @@
+# Ignore Rust build artifacts
+target
+**/target
+
+# Ignore Git directory
+.git
+
+# Ignore editor configs
+*.swp
+*.swo
+.vscode
+.idea
