@@ -6,5 +6,6 @@ edition.workspace = true
 [dependencies]
 common.workspace = true
 
+sha2.workspace = true
 risc0-zkvm = { workspace = true,  default-features = false, features = ['std'] }
 chacha20.workspace = true

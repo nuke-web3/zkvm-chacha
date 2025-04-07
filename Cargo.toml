@@ -12,6 +12,7 @@ methods = { path = "methods" }
 host = { path = "host" }
 common = { path = "common" }
 
+sha2 = "=0.10.8"
 chacha20 = "0.9.1"
 hex-literal = "1.0.0"
 
@@ -19,6 +20,9 @@ risc0-zkvm = { version = "2.0",  default-features = false, features = ['std'] }
 risc0-build = "2.0"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 serde = "1.0"
+
+[patch.crates-io]
+sha2-v0-10-8 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", tag = "patch-sha2-0.10.8-sp1-4.0.0" }
 
 # Always optimize; building and running the guest takes much longer without optimization.
 [profile.dev]

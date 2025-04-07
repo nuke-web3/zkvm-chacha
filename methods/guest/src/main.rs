@@ -1,9 +1,8 @@
 use chacha20::cipher::{KeyIvInit, StreamCipher};
 use chacha20::ChaCha20;
-use risc0_zkvm::{
-    guest::env,
-    sha::{Impl, Sha256},
-};
+use risc0_zkvm::guest::env;
+
+use sha2::{Digest, Sha256};
 
 use common::INPUT_BYTES_LENGTH;
 
@@ -19,8 +18,8 @@ fn main() {
     env::read_slice(&mut buffer);
 
     // Hash plaintext & commit
-    let digest = Impl::hash_bytes(&buffer);
-    env::commit(&digest);
+    let digest = Sha256::digest(&buffer);
+    env::commit_slice(&digest);
 
     // TODO:
     // - Hash key and/or nonce & commit?
